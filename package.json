@@ -1,0 +1,29 @@
+{
+  "name": "cashly-core",
+  "version": "1.0.0",
+  "description": "Finance simulator",
+  "main": "src/simulator.ts",
+  "scripts": {
+    "test": "jest",
+    "build": "tsc",
+    "clean": "rm -rv build/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cashly/core.git"
+  },
+  "author": "Jerred Shepherd",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/cashly/core/issues"
+  },
+  "homepage": "https://github.com/cashly/core#readme",
+  "devDependencies": {
+    "@types/jest": "^24.0.12",
+    "jest": "^24.7.1",
+    "ts-jest": "^24.0.2",
+    "tslint": "^5.16.0",
+    "tslint-config-semistandard": "^8.0.0",
+    "typescript": "^3.4.5"
+  }
+}
