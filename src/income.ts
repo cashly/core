@@ -1,34 +1,29 @@
-import { EventFrequency } from './eventFrequency';
+import { EventApplier } from './eventApplier';
 
 export class IncomeEntry {
   name: string;
   amount: number;
-  startDate?: Date;
-  frequency: EventFrequency;
+  frequency: EventApplier;
 
-  constructor (name: string, amount: number, frequency: EventFrequency) {
+  constructor (name: string, amount: number, frequency: EventApplier) {
     this.name = name;
     this.amount = amount;
     this.frequency = frequency;
   }
 
   doesApply (date: Date): boolean {
-    if (!this.startDate || date >= this.startDate) {
-      return this.frequency.doesApply(date);
-    } else {
-      return false;
-    }
+    return this.frequency.doesApply(date);
   }
 }
 
 export function calculateIncomeForDate (date: Date, incomeEntries: IncomeEntry[]) {
-  let incomeForMonth = 0;
+  let income = 0;
 
   incomeEntries.forEach(entry => {
     if (entry.doesApply(date)) {
-      incomeForMonth += entry.amount;
+      income += entry.amount;
     }
   });
 
-  return incomeForMonth;
+  return income;
 }
