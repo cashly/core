@@ -2,7 +2,8 @@
   "name": "cashly-core",
   "version": "1.0.0",
   "description": "Finance simulator",
-  "main": "src/simulator.ts",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
   "scripts": {
     "test": "jest",
     "build": "tsc",
@@ -25,5 +26,8 @@
     "tslint": "^5.16.0",
     "tslint-config-semistandard": "^8.0.0",
     "typescript": "^3.4.5"
+  },
+  "dependencies": {
+    "date-fns": "^1.30.1"
   }
 }

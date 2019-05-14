@@ -1,7 +1,7 @@
 import { MonthlyEvent, YearlyEvent } from '../src/eventApplier';
 
 describe('MonthlyEvent', () => {
-  test('doesApply returns true on same day of date', () => {
+  test('doesApply returns true on same day of startDate', () => {
     let date = new Date();
     let nextDate = new Date();
     nextDate.setMonth(nextDate.getMonth() + 1);
