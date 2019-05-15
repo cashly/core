@@ -1,6 +1,7 @@
 import { runSimulation, runSimulationForDate } from '../src/simulator';
 
 describe('simulationResult', () => {
+  // TODO test merging
 });
 
 describe('runSimulation', () => {

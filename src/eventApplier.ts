@@ -1,3 +1,5 @@
+import { isLastDayOfMonth } from 'date-fns';
+
 /**
  * Determines whether or not an event applies to a given startDate.
  */
@@ -53,5 +55,17 @@ export class OneOffEvent implements EventApplier {
     return this.date.getFullYear() === date.getFullYear() &&
         this.date.getMonth() === date.getMonth() &&
         this.date.getDate() === date.getDate();
+  }
+}
+
+export class EndOfMonthEvent implements EventApplier {
+  date: Date;
+
+  constructor (date: Date) {
+    this.date = date;
+  }
+
+  doesApply (date: Date) {
+    return date >= this.date && isLastDayOfMonth(date);
   }
 }
