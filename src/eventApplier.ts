@@ -1,71 +1,32 @@
-import { isLastDayOfMonth } from 'date-fns';
+import { addMonths, endOfMonth, isLastDayOfMonth, lastDayOfMonth, setDate } from 'date-fns';
 
-/**
- * Determines whether or not an event applies to a given startDate.
- */
 export interface EventApplier {
-  doesApply: (date: Date) => boolean;
+  getNextApplication: (currentDate: Date) => Date;
 }
 
-/**
- * An event that occurs every date on the same day.
- */
-export class MonthlyEvent implements EventApplier {
-  date: Date;
+export class MonthlyEventApplier implements EventApplier {
+  readonly date: Date;
 
   constructor (date: Date) {
     this.date = date;
   }
 
-  doesApply (date: Date) {
-    return this.date <= date &&
-        this.date.getDate() === date.getDate();
+  getNextApplication (currentDate: Date) {
+    if (currentDate.getDate() < this.date.getDate()) {
+      return setDate(currentDate, this.date.getDate());
+    } else {
+      return addMonths(setDate(currentDate, this.date.getDate()), 1);
+    }
   }
+
 }
 
-/**
- * An event that occurs every year on the same day.
- */
-export class YearlyEvent implements EventApplier {
-  date: Date;
-
-  constructor (date: Date) {
-    this.date = date;
-  }
-
-  doesApply (date: Date) {
-    return this.date <= date &&
-        this.date.getMonth() === date.getMonth() &&
-        this.date.getDate() === date.getDate();
-  }
-}
-
-/**
- * An event that occurs once on a certain day.
- */
-export class OneOffEvent implements EventApplier {
-  date: Date;
-
-  constructor (date: Date) {
-    this.date = date;
-  }
-
-  doesApply (date: Date) {
-    console.log(this.date + ' ' + date);
-    return this.date.getFullYear() === date.getFullYear() &&
-        this.date.getMonth() === date.getMonth() &&
-        this.date.getDate() === date.getDate();
-  }
-}
-
-export class EndOfMonthEvent implements EventApplier {
-  date: Date;
-
-  constructor (date: Date) {
-    this.date = date;
-  }
-
-  doesApply (date: Date) {
-    return date >= this.date && isLastDayOfMonth(date);
-  }
+export class LastDayOfMonthApplier implements EventApplier {
+  getNextApplication (currentDate: Date) {
+    if (isLastDayOfMonth(currentDate)) {
+      return lastDayOfMonth(addMonths(currentDate, 1));
+    } else {
+      return endOfMonth(currentDate);
+    }
+  };
 }

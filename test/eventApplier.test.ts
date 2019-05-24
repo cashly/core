@@ -1,4 +1,4 @@
-import { MonthlyEvent, YearlyEvent } from '../src/eventApplier';
+import { MonthlyEvent, YearlyEvent } from '../src/eventApplierLegacy';
 
 describe('MonthlyEvent', () => {
   test('doesApply returns true on same day of startDate', () => {

@@ -1,7 +1,7 @@
-import { calculateIncomeForDate, IncomeEntry } from '../src/income';
+import { calculateIncomeForDate, IncomeEntry } from '../src/entry/income';
 
-describe('IncomeEntry', () => {
-  test('doesApply returns true when EventApplier returns true', () => {
+describe('ExpenseEntry', () => {
+  test('doesApply returns true when EventApplierLegacy returns true', () => {
     let entry = new IncomeEntry('Entry', 0, {
       doesApply: () => true
     });
@@ -9,7 +9,7 @@ describe('IncomeEntry', () => {
     expect(entry.doesApply(new Date())).toBe(true);
   });
 
-  test('doesApply returns false when EventApplier returns false', () => {
+  test('doesApply returns false when EventApplierLegacy returns false', () => {
     let entry = new IncomeEntry('Entry', 0, {
       doesApply: () => false
     });

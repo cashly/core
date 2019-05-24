@@ -1,4 +1,4 @@
-import { runSimulation, runSimulationForDate } from '../src/simulator';
+import { runSimulation, runSimulationForDate } from '../src/simulation/simulator';
 
 describe('simulationResult', () => {
   // TODO test merging
