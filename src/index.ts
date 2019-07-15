@@ -1,8 +1,8 @@
-import { IncomeEntry } from './entry/income';
-import { ExpenseEntry } from './entry/expenses';
+import { IncomeEvent } from './entry/income';
+import { ExpenseEvent } from './entry/expense';
 import {
   runSimulation,
-  SimulationResult,
+  SimulationState,
   SimulationOptions,
   runMonthlySimulation
 } from './simulation/simulator';
@@ -15,19 +15,19 @@ import {
 } from './eventApplierLegacy';
 import {
   AssetEntry
-} from './entry/assets';
-import { DebtEntry } from './entry/debts';
-import { Entry } from './entry/entry';
+} from './entry/asset';
+import { DebtEntry } from './entry/debt';
+import { SimulationEvent } from './entry/simulationEvent';
 
 export {
-  Entry,
+  SimulationEvent,
   AssetEntry,
   DebtEntry,
-  ExpenseEntry,
-  IncomeEntry,
+  ExpenseEvent,
+  IncomeEvent,
   runSimulation,
   runMonthlySimulation,
-  SimulationResult,
+  SimulationState,
   SimulationOptions,
   EventApplierLegacy,
   MonthlyEvent,

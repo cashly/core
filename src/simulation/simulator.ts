@@ -1,52 +1,80 @@
-import { AssetEntry, ExpenseEntry, Entry, IncomeEntry } from '..';
+import { AssetEntry, DebtEntry, SimulationEvent, ExpenseEvent, IncomeEvent } from '..';
 import { List } from 'immutable';
+import { Period } from '../period';
+import { Heap } from 'typescript-collections';
+import { EntryApplicationResult } from '../entry/simulationEvent';
 
 export interface Simulation {
   readonly options: SimulationOptions;
-  readonly behavior: SimulationBehavior;
-  readonly input: SimulationInputs;
-  readonly output: SimulationOptions;
+  readonly entries: SimulationEntries;
 }
 
+/**
+ * Options that control how a simulation is executed at the top-level.
+ */
 export interface SimulationOptions {
   readonly simulationPeriod: Period;
 }
 
-export interface SimulationBehavior {
-  readonly mergeResultFunction: (previousDate: Date | null, currentDate: Date) => boolean;
-}
-
 /**
- * When an Entry was triggered.
+ * An instance of an entry being applied.
  */
-export interface EntryApplication {
-  readonly entry: Entry;
+export interface EntryApplicationEvent {
+  readonly entry: SimulationEvent;
   readonly date: Date;
 }
 
 /**
- * A period in time.
+ * Entries which are used in a simulation.
  */
-export interface Period {
-  readonly startDate: Date;
-  readonly endDate: Date;
-}
-
-export interface SimulationInputs {
-  readonly income: List<IncomeEntry>;
-  readonly expenses: List<ExpenseEntry>;
+export interface SimulationEntries {
+  readonly income: List<IncomeEvent>;
+  readonly expenses: List<ExpenseEvent>;
   readonly assets: List<AssetEntry>;
+  readonly debts: List<DebtEntry>;
 }
 
-export interface SimulationResult {
-  readonly incomePreTax: number;
-  readonly incomePostTax: number;
-  readonly expenses: number;
-  readonly netWorth: number;
+export interface DatedEntryApplication {
+  readonly date: Date;
+  readonly result: EntryApplicationResult;
 }
 
-export interface SimulationOutputs {
-  readonly period: Period;
-  readonly entryApplications: List<EntryApplication>;
-  readonly result: SimulationResult;
+export function simulate (simulation: Simulation) {
+  let heap = new Heap<EntryApplicationEvent>();
+  let initialEntryApplications = List<EntryApplicationEvent>();
+  let { entries, result } = simulation;
+  let { startDate, endDate } = simulation.options.simulationPeriod;
+
+  entries.income.forEach(entry => {
+    let firstApplication = entry.applier.getNextDate(startDate);
+    initialEntryApplications = initialEntryApplications.push({
+      entry,
+      date: firstApplication
+    });
+  });
+
+  initialEntryApplications.forEach(entry => {
+    heap.add(entry);
+  });
+
+  while (!heap.isEmpty()) {
+    let top = heap.removeRoot() as EntryApplicationEvent;
+
+    if (top.date > endDate) {
+      break;
+    }
+
+    result = result.push({
+      date: top.date,
+      result: top.entry.getResult()
+    });
+
+    let nextApplication = top.entry.applier.getNextOccurrence(top.date);
+    heap.add({
+      entry: top.entry,
+      date: nextApplication
+    });
+  }
+
+  console.log(result);
 }

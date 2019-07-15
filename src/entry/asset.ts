@@ -1,7 +1,7 @@
-import { SimulationEvent } from './simulationEvent';
+import { SimulationEvent, EntryApplicationResult } from './simulationEvent';
 import { EventScheduler } from '../eventScheduler';
 
-export class IncomeEvent implements SimulationEvent {
+export class AssetEntry implements SimulationEvent {
   readonly name: string;
   readonly amount: number;
   readonly applier: EventScheduler;
@@ -21,4 +21,5 @@ export class IncomeEvent implements SimulationEvent {
       expenses: 0
     };
   }
+
 }

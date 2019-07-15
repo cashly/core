@@ -1,8 +1,8 @@
-import { calculateIncomeForDate, IncomeEntry } from '../src/entry/income';
+import { calculateIncomeForDate, IncomeEvent } from '../src/entry/income';
 
-describe('ExpenseEntry', () => {
+describe('ExpenseEvent', () => {
   test('doesApply returns true when EventApplierLegacy returns true', () => {
-    let entry = new IncomeEntry('Entry', 0, {
+    let entry = new IncomeEvent('Event', 0, {
       doesApply: () => true
     });
 
@@ -10,7 +10,7 @@ describe('ExpenseEntry', () => {
   });
 
   test('doesApply returns false when EventApplierLegacy returns false', () => {
-    let entry = new IncomeEntry('Entry', 0, {
+    let entry = new IncomeEvent('Event', 0, {
       doesApply: () => false
     });
 
@@ -20,7 +20,7 @@ describe('ExpenseEntry', () => {
 
 describe('calculateIncomeForDate', () => {
   test('calls doesApply for incomeEntries', () => {
-    let entry = new IncomeEntry('Entry', 0, {
+    let entry = new IncomeEvent('Event', 0, {
       doesApply: jest.fn()
     });
 
@@ -30,7 +30,7 @@ describe('calculateIncomeForDate', () => {
   });
 
   test('adds amount when doesApply is true', () => {
-    let entry = new IncomeEntry('Entry', 10, {
+    let entry = new IncomeEvent('Event', 10, {
       doesApply: () => true
     });
 
@@ -40,7 +40,7 @@ describe('calculateIncomeForDate', () => {
   });
 
   test('doesn\'t add amount when doesApply is false', () => {
-    let entry = new IncomeEntry('Entry', 10, {
+    let entry = new IncomeEvent('Event', 10, {
       doesApply: () => false
     });
 
