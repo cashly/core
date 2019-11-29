@@ -5,12 +5,9 @@ import {ExpenseEvent} from "../events/expenseEvent";
 export class ExpenseEventApplier implements EventApplier<ExpenseEvent> {
     apply(event: ExpenseEvent, account: Account) {
         let newBalance = account.balance - event.amount;
-        let newAccount = {
+        return {
             ...account,
             balance: newBalance
         };
-        return {
-          eventOccurrence:
-        }
     }
 }

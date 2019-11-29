@@ -1,14 +1,13 @@
-import {AccountEvent} from './accountEvent';
-import {Account} from '../../account/account';
+import {Event} from './event';
 
-export class ExpenseEvent implements AccountEvent {
-    readonly account: Account;
+export class ExpenseEvent implements Event {
     readonly name: string;
+    readonly date: Date;
     readonly amount: number;
 
-    constructor(account: Account, name: string, amount: number) {
-        this.account = account;
+    constructor(name: string, date: Date, amount: number) {
         this.name = name;
+        this.date = date;
         this.amount = amount;
     }
 }

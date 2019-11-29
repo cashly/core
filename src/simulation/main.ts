@@ -1,47 +1,63 @@
 import {Account} from '../account/account';
 import {StringAccountIdentifier} from '../account/stringAccountIdentifier';
 import {EventScheduler} from '../event/scheduler/eventScheduler';
-import {BasicEventScheduler} from '../event/scheduler/basicEventScheduler';
-import {ConstantEventCreator} from '../event/creator/constantEventCreator';
-import {IncomeEvent} from '../event/events/incomeEvent';
+import {ConstantIncomeEventCreator} from '../event/creator/constantIncomeEventCreator';
 import {MonthlyScheduler} from '../schedule/schedulers/monthlyScheduler';
-import {EventOccurrence} from '../event/eventOccurrence';
-import {ExpenseEvent} from '../event/events/expenseEvent';
-import {IncomeEventApplier} from '../event/applier/incomeEventApplier';
-import {ExpenseEventApplier} from '../event/applier/expenseEventApplier';
-
-let eventOccurrences: EventOccurrence[] = [];
+import {AccountEventScheduler} from '../schedule/accountEventScheduler';
+import {Event} from '../event/events/event';
+import {addYears} from 'date-fns';
+import {PriorityQueue} from 'typescript-collections';
+import {AccountEventCause} from '../event/AccountEventCause';
+import {AccountEvent} from '../event/events/accountEvent';
 
 let simpleBank: Account = {
     identifier: new StringAccountIdentifier("simple"),
     balance: 0
 };
 
-let paycheckEventScheduler: EventScheduler = new BasicEventScheduler(
-    new ConstantEventCreator(
-        new IncomeEvent(simpleBank, 'Amazon Paycheck', 7000),
-    ),
+let paycheckEventScheduler = new EventScheduler(
+    new ConstantIncomeEventCreator("Paycheck", 9000),
     new MonthlyScheduler(31)
 );
 
-let today: Date = new Date();
+let schedulers = [];
+let accountEventScheduler = new AccountEventScheduler(paycheckEventScheduler, simpleBank);
+schedulers.push(accountEventScheduler);
 
-let nextEvent = paycheckEventScheduler.getNextEvent(today);
-eventOccurrences.push(nextEvent);
+function simulate<T extends Event, V extends AccountEvent>(schedulers: AccountEventScheduler<T>[], start: Date, end: Date) {
+    let queue = new PriorityQueue<AccountEventCause<AccountEventScheduler<T>>>((a, b) => {
+        return a.event.date.getTime() - b.event.date.getTime();
+    });
 
-console.log(nextEvent);
+    let currentDate = start;
 
-eventOccurrences.forEach(occurrence => {
-    let event = occurrence.event;
-    let newAccount: Account;
-    if (event instanceof IncomeEvent) {
-        let applier = new IncomeEventApplier();
-        newAccount = applier.apply(event, event.account);
-    } else if (event instanceof ExpenseEvent) {
-        let applier = new ExpenseEventApplier();
-        newAccount = applier.apply(event, event.account);
-    } else {
+    schedulers.forEach(scheduler => {
+        let eventCause: AccountEventCause<AccountEventScheduler<T>> = {
+            event: scheduler.getNextEvent(currentDate),
+            cause: scheduler
+        };
+        queue.add(eventCause)
+    });
 
+    while (currentDate < end) {
+        let nextEvent = queue.dequeue();
+        if (!nextEvent) {
+            break;
+        }
+
+        currentDate = nextEvent.event.date;
+
+        // TODO APPLY EVENT
+        console.log(nextEvent.event);
+
+        queue.enqueue({
+            event: nextEvent.cause.getNextEvent(currentDate),
+            cause: nextEvent.cause
+        });
     }
+}
 
-});
+let today: Date = new Date();
+let oneYear: Date = addYears(today, 1);
+
+simulate(schedulers, today, oneYear);

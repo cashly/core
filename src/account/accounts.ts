@@ -4,8 +4,8 @@
 import {AccountIdentifier} from './accountIdentifier';
 import {Account} from './account';
 
-export interface AccountStatuses {
+export interface Accounts {
     getAccounts: () => Account[];
     getAccount: (accountIdentifier: AccountIdentifier) => Account;
-    setAccount: (account: Account) => AccountStatuses;
+    setAccount: (account: Account) => Accounts;
 }

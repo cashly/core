@@ -1,5 +1,8 @@
 import {Event} from '../events/event';
 
-export interface EventCreator {
-    create: () => Event;
+/**
+ * Creates events
+ */
+export interface EventCreator<T extends Event> {
+    create: (date: Date) => T;
 }
