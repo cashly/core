@@ -55,7 +55,7 @@ function debtReports(): void {
       const info = {
         ...loan,
       };
-      delete info.minimumPayment;
+      delete info.minimum_payment;
       delete info.interest_rate;
       return info;
     })

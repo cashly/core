@@ -10,9 +10,10 @@
     "watch": "tsc -w",
     "clean": "rm -rv build/",
     "run": "node build/src/Main.js",
-    "lint": "eslint '*/**/*.{js,ts}'",
+    "lint": "eslint '*/**/*.{js,ts,json}' --color",
+    "lint:fix": "eslint '*/**/*.{js,ts,json}' --fix --color",
     "prettier": "prettier --check .",
-    "fix": "eslint '*/**/*.{js,ts}' --fix"
+    "prettier:fix": "prettier --write ."
   },
   "repository": {
     "type": "git",
@@ -41,6 +42,5 @@
     "ts-jest": "^26.0.0",
     "typescript": "^3.9.2"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }
